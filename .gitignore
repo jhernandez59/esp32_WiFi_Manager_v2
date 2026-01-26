@@ -1,0 +1,18 @@
+# PlatformIO
+.pio/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+
+# Build artifacts (por si acaso)
+*.elf
+*.map
+
+# Backup / temp files
+*~
+*.bak
