@@ -4,12 +4,16 @@
 #include "wifi/WiFiManager.h"
 #include "led/LEDController.h"
 #include "web/MyWebServer.h"
+#include "ota/OTAManager.h"
+
+/* === main.cpp ver. 6 === */
 
 // Instancias de los módulos
 FileManager* fileManager;
 WiFiManager* wifiManager;
 LEDController* ledController;
 MyWebServer* webServer;
+OTAManager* otaManager;
 
 void setup() {
     // Inicializar puerto serial
@@ -61,6 +65,12 @@ void setup() {
         webServer->begin(false); // Modo Station
         ledController->setState(LEDState::ON);
         
+        // 5. Inicializar OTA (solo en modo Station)
+        if (OTA_ENABLED) {
+            otaManager = OTAManager::getInstance();
+            otaManager->begin(OTA_HOSTNAME, OTA_PASSWORD);
+        }
+        
     } else {
         // ========== MODO ACCESS POINT - Portal de Configuración ==========
         if (DEBUG_SERIAL) {
@@ -90,6 +100,11 @@ void loop() {
     
     // Verificar conexión WiFi periódicamente
     wifiManager->checkConnection();
+    
+    // Manejar actualizaciones OTA (solo si está habilitado y conectado)
+    if (OTA_ENABLED && wifiManager->isWiFiConnected()) {
+        otaManager->handle();
+    }
     
     // Agregar pequeño delay para no saturar el CPU
     delay(10);

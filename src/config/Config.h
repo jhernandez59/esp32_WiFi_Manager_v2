@@ -20,6 +20,12 @@ Credenciales de AP
 #define AP_PASSWORD "12345678"       // Contraseña del AP (mínimo 8 caracteres)
 #define WEB_SERVER_PORT 80           // Puerto del servidor web
 
+// ==================== CONFIGURACIÓN OTA ====================
+#define OTA_HOSTNAME "ESP32-OTA"     // Nombre del dispositivo para OTA
+#define OTA_PASSWORD "admin123"      // Contraseña para OTA (dejar "" para sin contraseña)
+#define OTA_PORT 3232                // Puerto OTA (por defecto 3232)
+#define OTA_ENABLED true             // Habilitar OTA por defecto
+
 // ==================== TIMEOUTS E INTERVALOS ====================
 #define WIFI_CONNECT_TIMEOUT 10000   // Timeout para conectar WiFi (ms)
 #define WIFI_CHECK_INTERVAL 30000    // Intervalo para verificar conexión WiFi (ms)

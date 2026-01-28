@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESP32 WiFi Manager</title>
+    <title>ESP32 Control Panel</title>
     <style>
         * {
             margin: 0;
@@ -13,185 +13,213 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             padding: 20px;
         }
         
         .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 500px;
-            width: 100%;
-            padding: 40px;
-            animation: slideIn 0.5s ease-out;
-        }
-        
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            max-width: 800px;
+            margin: 0 auto;
         }
         
         .header {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             text-align: center;
-            margin-bottom: 30px;
         }
         
         .header h1 {
             color: #333;
-            font-size: 28px;
+            font-size: 32px;
             margin-bottom: 10px;
         }
         
         .header p {
             color: #666;
-            font-size: 14px;
+            font-size: 16px;
         }
         
-        .icon {
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .status-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: #4CAF50;
+            color: white;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-top: 15px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+        
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card h2 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .info-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #2a5298;
+        }
+        
+        .info-item label {
+            display: block;
+            color: #666;
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .info-item .value {
+            color: #333;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .led-control {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .led-status {
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 30px;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            color: #333;
-            font-weight: 600;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-        
-        input[type="text"],
-        input[type="password"] {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 14px;
+            font-size: 48px;
             transition: all 0.3s ease;
-            background: #f8f9fa;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
         }
         
-        input[type="text"]:focus,
-        input[type="password"]:focus {
-            outline: none;
-            border-color: #667eea;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        .led-status.on {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            box-shadow: 0 5px 30px rgba(255, 215, 0, 0.5);
         }
         
-        .checkbox-group {
+        .led-status.off {
+            background: linear-gradient(135deg, #666 0%, #888 100%);
+        }
+        
+        .button-group {
             display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            padding: 15px;
-            background: #f0f4ff;
-            border-radius: 10px;
-        }
-        
-        input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            margin-right: 10px;
-            cursor: pointer;
-            accent-color: #667eea;
-        }
-        
-        .checkbox-group label {
-            margin: 0;
-            cursor: pointer;
-            font-weight: 500;
-        }
-        
-        .static-ip-fields {
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            border-left: 4px solid #667eea;
-        }
-        
-        .static-ip-fields.hidden {
-            display: none;
-        }
-        
-        .static-ip-fields h3 {
-            color: #667eea;
-            font-size: 16px;
-            margin-bottom: 15px;
-        }
-        
-        .help-text {
-            font-size: 12px;
-            color: #888;
-            margin-top: 5px;
-        }
-        
-        button {
+            gap: 15px;
             width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            max-width: 400px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 15px 30px;
             border: none;
             border-radius: 10px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 10px;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
         }
         
-        button:hover {
+        .btn-on {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+        }
+        
+        .btn-on:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 5px 20px rgba(76, 175, 80, 0.4);
         }
         
-        button:active {
-            transform: translateY(0);
+        .btn-off {
+            background: linear-gradient(135deg, #f44336 0%, #da190b 100%);
+            color: white;
         }
         
-        .info-box {
+        .btn-off:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(244, 67, 54, 0.4);
+        }
+        
+        .btn-reset {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+            color: white;
+            margin-top: 20px;
+            width: 100%;
+        }
+        
+        .btn-reset:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 152, 0, 0.4);
+        }
+        
+        .warning-box {
             background: #fff3cd;
             border-left: 4px solid #ffc107;
             padding: 15px;
             border-radius: 5px;
-            margin-bottom: 20px;
+            margin-top: 20px;
         }
         
-        .info-box p {
+        .warning-box p {
             color: #856404;
-            font-size: 13px;
+            font-size: 14px;
             line-height: 1.5;
         }
         
         @media (max-width: 600px) {
-            .container {
-                padding: 30px 20px;
-            }
-            
             .header h1 {
                 font-size: 24px;
+            }
+            
+            .card h2 {
+                font-size: 20px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -199,125 +227,115 @@
 <body>
     <div class="container">
         <div class="header">
-            <div class="icon">📡</div>
-            <h1>WiFi Manager</h1>
-            <p>Configura tu ESP32 para conectarse a tu red WiFi</p>
+            <h1>🎛️ Panel de Control ESP32</h1>
+            <p>Control remoto de tu dispositivo</p>
+            <span class="status-badge">✓ Conectado</span>
         </div>
         
-        <div class="info-box">
-            <p><strong>📌 Importante:</strong> Una vez configurado, el ESP32 se reiniciará e intentará conectarse a tu red WiFi.</p>
+        <div class="card">
+            <h2>🔄 Actualización OTA</h2>
+            <p style="color: #666; margin-bottom: 15px;">
+                Puedes actualizar el firmware de tu ESP32 de forma remota usando Arduino IDE o PlatformIO.
+            </p>
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>Hostname</label>
+                    <div class="value">ESP32-OTA</div>
+                </div>
+                <div class="info-item">
+                    <label>Puerto</label>
+                    <div class="value">3232</div>
+                </div>
+            </div>
+            <div style="background: #e3f2fd; padding: 15px; border-radius: 10px; margin-top: 15px; border-left: 4px solid #2196F3;">
+                <p style="color: #1565c0; font-size: 14px; margin: 0;">
+                    <strong>💡 Cómo usar:</strong><br>
+                    • <strong>Arduino IDE:</strong> Tools → Port → [ESP32-OTA]<br>
+                    • <strong>PlatformIO:</strong> Upload usando la opción OTA en la barra inferior
+                </p>
+            </div>
         </div>
         
-        <form action="/save" method="POST">
-            <div class="form-group">
-                <label for="ssid">🌐 Nombre de Red WiFi (SSID) *</label>
-                <input type="text" id="ssid" name="ssid" placeholder="Ej: MiRedWiFi" required>
-                <div class="help-text">Nombre de tu red WiFi (obligatorio)</div>
-            </div>
-            
-            <div class="form-group">
-                <label for="pass">🔒 Contraseña WiFi</label>
-                <input type="password" id="pass" name="pass" placeholder="Contraseña de tu red">
-                <div class="help-text">Deja en blanco si tu red no tiene contraseña</div>
-            </div>
-            
-            <div class="checkbox-group">
-                <input type="checkbox" id="dhcp" name="dhcp" value="true" checked onchange="toggleStaticIP()">
-                <label for="dhcp">⚡ Obtener IP automáticamente (DHCP)</label>
-            </div>
-            
-            <div class="static-ip-fields hidden" id="staticFields">
-                <h3>⚙️ Configuración de IP Estática</h3>
-                
-                <div class="form-group">
-                    <label for="ip">📍 Dirección IP</label>
-                    <input type="text" id="ip" name="ip" placeholder="192.168.1.200">
-                    <div class="help-text">Ej: 192.168.1.200</div>
+        <div class="card">
+            <h2>📊 Información de Red</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>Red WiFi</label>
+                    <div class="value">%SSID%</div>
                 </div>
-                
-                <div class="form-group">
-                    <label for="gateway">🌉 Gateway (Puerta de Enlace)</label>
-                    <input type="text" id="gateway" name="gateway" placeholder="192.168.1.1">
-                    <div class="help-text">Generalmente es la IP de tu router</div>
+                <div class="info-item">
+                    <label>Dirección IP</label>
+                    <div class="value">%IP%</div>
                 </div>
-                
-                <div class="form-group">
-                    <label for="subnet">🔢 Máscara de Subred</label>
-                    <input type="text" id="subnet" name="subnet" placeholder="255.255.255.0" value="255.255.255.0">
-                    <div class="help-text">Normalmente es 255.255.255.0</div>
+                <div class="info-item">
+                    <label>Gateway</label>
+                    <div class="value">%GATEWAY%</div>
+                </div>
+                <div class="info-item">
+                    <label>Subnet Mask</label>
+                    <div class="value">%SUBNET%</div>
                 </div>
             </div>
-            
-            <button type="submit">💾 Guardar y Conectar</button>
-        </form>
+        </div>
+        
+        <div class="card">
+            <h2>💡 Control del LED</h2>
+            <div class="led-control">
+                <div class="led-status %STATE%">
+                    💡
+                </div>
+                <div class="button-group">
+                    <a href="/on" class="btn btn-on">🔆 Encender</a>
+                    <a href="/off" class="btn btn-off">🌙 Apagar</a>
+                </div>
+                <p style="color: #666; font-size: 18px; font-weight: 600;">
+                    Estado: <span style="color: %STATE% == 'on' ? '#4CAF50' : '#f44336';">%STATE%</span>
+                </p>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>⚙️ Configuración</h2>
+            <p style="color: #666; margin-bottom: 15px;">
+                Si necesitas cambiar la configuración de WiFi, puedes restablecer el dispositivo al modo de configuración.
+            </p>
+            <div class="warning-box">
+                <p><strong>⚠️ Advertencia:</strong> Al presionar el botón "Restablecer WiFi", se borrarán todas las configuraciones de red guardadas y el ESP32 se reiniciará en modo Access Point (AP).</p>
+            </div>
+            <a href="/reset" class="btn btn-reset" onclick="return confirm('¿Estás seguro de que deseas restablecer la configuración WiFi? El dispositivo se reiniciará.')">
+                🔄 Restablecer Configuración WiFi
+            </a>
+        </div>
+        
+        <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-align: center;">
+            <h2 style="color: white;">ℹ️ Información</h2>
+            <p style="color: rgba(255,255,255,0.9);">
+                Este panel te permite controlar remotamente tu ESP32 desde cualquier dispositivo conectado a la misma red WiFi.
+            </p>
+            <p style="color: rgba(255,255,255,0.9); margin-top: 10px; font-size: 14px;">
+                Desarrollado con ❤️ usando ESP32 + AsyncWebServer
+            </p>
+        </div>
     </div>
     
     <script>
-        function toggleStaticIP() {
-            const dhcpCheckbox = document.getElementById('dhcp');
-            const staticFields = document.getElementById('staticFields');
-            const ipInput = document.getElementById('ip');
-            const gatewayInput = document.getElementById('gateway');
-            const subnetInput = document.getElementById('subnet');
+        // Auto-refresh cada 5 segundos para actualizar el estado
+        // Comentar esta línea si no quieres auto-refresh
+        // setTimeout(function(){ location.reload(); }, 5000);
+        
+        // Aplicar clase CSS basada en el estado del LED
+        window.onload = function() {
+            const ledStatus = document.querySelector('.led-status');
+            const state = '%STATE%'.toLowerCase();
             
-            if (dhcpCheckbox.checked) {
-                staticFields.classList.add('hidden');
-                // No hacer campos requeridos cuando está en DHCP
-                ipInput.removeAttribute('required');
-                gatewayInput.removeAttribute('required');
-                subnetInput.removeAttribute('required');
+            if (state === 'on') {
+                ledStatus.classList.add('on');
+                ledStatus.classList.remove('off');
             } else {
-                staticFields.classList.remove('hidden');
-                // Hacer campos requeridos cuando se usa IP estática
-                ipInput.setAttribute('required', 'required');
-                gatewayInput.setAttribute('required', 'required');
-                subnetInput.setAttribute('required', 'required');
+                ledStatus.classList.add('off');
+                ledStatus.classList.remove('on');
             }
-        }
-        
-        // Validación básica de formato IP
-        function validateIP(ip) {
-            const regex = /^(\d{1,3}\.){3}\d{1,3}$/;
-            if (!regex.test(ip)) return false;
-            
-            const parts = ip.split('.');
-            return parts.every(part => {
-                const num = parseInt(part);
-                return num >= 0 && num <= 255;
-            });
-        }
-        
-        // Validar antes de enviar
-        document.querySelector('form').addEventListener('submit', function(e) {
-            const dhcpCheckbox = document.getElementById('dhcp');
-            
-            if (!dhcpCheckbox.checked) {
-                const ip = document.getElementById('ip').value;
-                const gateway = document.getElementById('gateway').value;
-                const subnet = document.getElementById('subnet').value;
-                
-                if (ip && !validateIP(ip)) {
-                    e.preventDefault();
-                    alert('❌ Formato de IP inválido. Usa el formato: 192.168.1.200');
-                    return;
-                }
-                
-                if (gateway && !validateIP(gateway)) {
-                    e.preventDefault();
-                    alert('❌ Formato de Gateway inválido. Usa el formato: 192.168.1.1');
-                    return;
-                }
-                
-                if (subnet && !validateIP(subnet)) {
-                    e.preventDefault();
-                    alert('❌ Formato de Subnet inválido. Usa el formato: 255.255.255.0');
-                    return;
-                }
-            }
-        });
-        
-        // Inicializar estado al cargar la página
-        toggleStaticIP();
+        };
     </script>
 </body>
 </html>
