@@ -21,7 +21,7 @@ struct WiFiConfig {
     String ip;
     String gateway;
     String subnet;
-    bool useDHCP;
+    bool useDHCP;   // true para DHCP, false para IP estática
 };
 
 class WiFiManager {
