@@ -1,18 +1,182 @@
+# ============================================================
 # PlatformIO
+# ============================================================
 .pio/
+.pioenvs/
+.piolibdeps/
+.clang_complete
+.gcc-flags.json
 
+# ============================================================
 # VS Code
+# ============================================================
 .vscode/
 *.code-workspace
 
-# OS / editor noise
-.DS_Store
-Thumbs.db
+# Opcional: Si quieres compartir settings de VSCode, comenta estas líneas:
+# .vscode/settings.json
+# .vscode/tasks.json
+# .vscode/launch.json
+# .vscode/extensions.json
 
-# Build artifacts (por si acaso)
+# ============================================================
+# Build Artifacts
+# ============================================================
 *.elf
+*.bin
+*.hex
 *.map
+*.eep
+*.lss
+*.sym
+.map
 
-# Backup / temp files
+# Archivos compilados
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+
+# ============================================================
+# ESP32 / Arduino Specific
+# ============================================================
+# Bootloader binaries
+*.bootloader.bin
+*.partitions.bin
+
+# OTA files
+*.ota
+
+# Memory dumps
+*.mem
+
+# ============================================================
+# OS Specific
+# ============================================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
 *~
+.directory
+.Trash-*
+
+# ============================================================
+# Editor / IDE
+# ============================================================
+# Vim
+*.swp
+*.swo
+*~.nib
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# JetBrains (CLion, etc)
+.idea/
+*.iml
+*.iws
+
+# ============================================================
+# Temporary / Backup Files
+# ============================================================
 *.bak
+*.tmp
+*.temp
+*.log
+*.cache
+
+# ============================================================
+# Python (for scripts)
+# ============================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+.Python
+venv/
+env/
+ENV/
+
+# ============================================================
+# Documentation Build (if using Sphinx, Doxygen, etc)
+# ============================================================
+docs/_build/
+docs/.doctrees/
+site/
+
+# ============================================================
+# Testing
+# ============================================================
+.coverage
+htmlcov/
+.pytest_cache/
+
+# ============================================================
+# Credentials / Secrets (IMPORTANTE)
+# ============================================================
+# NUNCA commitear credenciales
+secrets.h
+credentials.h
+config_secret.h
+passwords.txt
+*.key
+*.pem
+*.crt
+
+# Si tienes archivo de configuración local
+config_local.h
+Config_local.h
+
+# ============================================================
+# Project Specific (Opcional - Descomentar si aplica)
+# ============================================================
+# Si tienes archivos de configuración local que no quieres compartir
+# src/config/Config_local.h
+
+# Archivos de datos grandes
+# data/large_file.bin
+
+# Logs del proyecto
+# logs/
+
+# ============================================================
+# Node.js / Web Assets (si usas para frontend)
+# ============================================================
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# ============================================================
+# Misc
+# ============================================================
+# Patches
+*.patch
+*.diff
+
+# Archives
+*.zip
+*.tar.gz
+*.rar
+*.7z
+pio run
+src/config/Config_local.h
