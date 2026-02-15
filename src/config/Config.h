@@ -1,12 +1,3 @@
-/*
-Centraliza todas las constantes y configuraciones:
-
-Pines GPIO
-Nombres de archivos
-Parámetros de red
-Timeouts e intervalos
-Credenciales de AP
-*/
 #ifndef CONFIG_H
 #define CONFIG_H
 
@@ -21,8 +12,16 @@ Credenciales de AP
 #define WEB_SERVER_PORT 80           // Puerto del servidor web
 
 // ==================== CONFIGURACIÓN OTA ====================
-#define OTA_HOSTNAME "ESP32-OTA"     // Nombre del dispositivo para OTA
-#define OTA_PASSWORD "admin123"      // Contraseña para OTA (dejar "" para sin contraseña)
+// IMPORTANTE: Estas son configuraciones por defecto para desarrollo
+// Para producción, crea Config_local.h con tus valores personalizados
+#ifndef OTA_HOSTNAME
+  #define OTA_HOSTNAME "ESP32-OTA"     // Nombre del dispositivo para OTA
+#endif
+
+#ifndef OTA_PASSWORD
+  #define OTA_PASSWORD "admin123"      // Contraseña para OTA (CAMBIAR EN PRODUCCIÓN)
+#endif
+
 #define OTA_PORT 3232                // Puerto OTA (por defecto 3232)
 #define OTA_ENABLED true             // Habilitar OTA por defecto
 
@@ -67,5 +66,15 @@ namespace Messages {
     const char* const INVALID_IP = "Formato de IP inválido";
     const char* const CONFIG_SAVED = "Configuración guardada";
 }
+
+// ==================== INCLUIR CONFIGURACIÓN LOCAL ====================
+// Si existe Config_local.h, se incluirá y sobrescribirá valores de arriba
+#if __has_include("Config_local.h")
+  #include "Config_local.h"
+  #pragma message("✓ Usando Config_local.h - Configuración personalizada cargada")
+#else
+  #pragma message("⚠ Config_local.h no encontrado - Usando valores por defecto")
+  #pragma message("  Para producción: Copia Config_local.h.example a Config_local.h")
+#endif
 
 #endif // CONFIG_H

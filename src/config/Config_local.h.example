@@ -1,0 +1,93 @@
+#ifndef CONFIG_LOCAL_H
+#define CONFIG_LOCAL_H
+
+// ============================================================
+// CONFIGURACIÓN LOCAL PERSONALIZADA
+// ============================================================
+// 
+// Este archivo contiene configuraciones específicas de tu entorno
+// que NO deben ser commiteadas a Git (contraseñas, API keys, etc.)
+//
+// INSTRUCCIONES:
+// 1. Copia este archivo como "Config_local.h" (sin .example)
+//    cp Config_local.h.example Config_local.h
+//
+// 2. Completa con tus valores reales
+//
+// 3. Config_local.h está en .gitignore y NO se commiteará
+//
+// 4. Los valores aquí sobrescribirán los de Config.h
+//
+
+// ============================================================
+// CONFIGURACIÓN OTA (Over-The-Air Updates)
+// ============================================================
+
+// Nombre único para tu dispositivo en la red
+// Aparecerá como "ESP32-MiNombre.local" en Arduino IDE / PlatformIO
+#undef OTA_HOSTNAME
+#define OTA_HOSTNAME "ESP32-MiDispositivo"
+
+// Contraseña para actualizaciones OTA
+// ⚠️ IMPORTANTE: Usa una contraseña fuerte
+// Mínimo 8 caracteres, combina letras, números y símbolos
+#undef OTA_PASSWORD
+#define OTA_PASSWORD "MiPasswordSuperSeguro123!"
+
+// ============================================================
+// CONFIGURACIÓN WIFI (Opcional)
+// ============================================================
+// 
+// Si quieres hardcodear credenciales WiFi (NO RECOMENDADO)
+// Descomenta y completa:
+//
+// #define HARDCODED_WIFI_SSID "MiRedWiFi"
+// #define HARDCODED_WIFI_PASSWORD "MiPasswordWiFi"
+//
+// Luego en WiFiManager.cpp, usar estos valores como fallback
+
+// ============================================================
+// API KEYS Y CREDENCIALES EXTERNAS (Si las necesitas)
+// ============================================================
+//
+// Ejemplos para cuando agregues servicios externos:
+//
+// MQTT
+// #define MQTT_SERVER "mqtt.miservidor.com"
+// #define MQTT_PORT 1883
+// #define MQTT_USER "mi_usuario"
+// #define MQTT_PASSWORD "mi_password"
+// #define MQTT_CLIENT_ID "ESP32-Cliente-001"
+//
+// APIs Web
+// #define OPENWEATHER_API_KEY "tu_api_key_aqui"
+// #define TELEGRAM_BOT_TOKEN "tu_bot_token_aqui"
+// #define BLYNK_AUTH_TOKEN "tu_blynk_token_aqui"
+//
+// Home Assistant
+// #define HA_SERVER "http://192.168.1.100:8123"
+// #define HA_TOKEN "tu_long_lived_token_aqui"
+
+// ============================================================
+// CONFIGURACIONES PERSONALIZADAS
+// ============================================================
+//
+// Puedes agregar cualquier configuración específica aquí
+// Por ejemplo:
+//
+// #define MY_SENSOR_PIN 4
+// #define MY_RELAY_PIN 5
+// #define CUSTOM_TIMEOUT 5000
+
+// ============================================================
+// DEBUG Y DESARROLLO
+// ============================================================
+//
+// Para desarrollo, puedes activar más mensajes debug:
+// #undef DEBUG_SERIAL
+// #define DEBUG_SERIAL true
+//
+// O cambiar el hostname para diferenciar dispositivos:
+// #define DEVICE_NAME "ESP32-Desarrollo"
+
+#endif // CONFIG_LOCAL_H
