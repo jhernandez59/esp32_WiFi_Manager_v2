@@ -6,6 +6,24 @@
 // ==================== CONFIGURACIÓN DE PINES ====================
 #define LED_PIN 2                    // GPIO del LED de estado
 
+// ==================== PINES DE SENSORES ====================
+// Sensores I2C
+#define I2C_SDA 21                   // Pin SDA para I2C
+#define I2C_SCL 22                   // Pin SCL para I2C
+
+// Sensores Analógicos (ADC1 - Compatible con WiFi)
+#define SMOKE_SENSOR_PIN 36          // VP - Sensor de humo MEMS
+#define CH4_SENSOR_PIN 39            // VN - Sensor de metano MEMS
+
+// Actuadores
+#define RGB_LED_PIN 23               // LED RGB WS2812B (NeoPixel)
+#define BUZZER_PIN 32                // Buzzer activo o pasivo
+#define BUTTON_PIN 34                // Botón de reset de alarma
+
+// ==================== CONFIGURACIÓN DE SENSORES ====================
+#define SENSOR_READ_INTERVAL 5000    // Intervalo de lectura de sensores (ms)
+#define CH4_LEL_THRESHOLD 5.0        // % LEL para alarma crítica (5% = explosivo)
+
 // ==================== CONFIGURACIÓN DE RED ====================
 #define AP_SSID "ESP-WIFI-MANAGER"   // Nombre del Access Point
 #define AP_PASSWORD "12345678"       // Contraseña del AP (mínimo 8 caracteres)
